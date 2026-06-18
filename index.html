@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wyatt Thompson — Data Analyst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #6366f1;
+      --accent-light: #eef2ff;
+      --accent-dark: #4338ca;
+      --bg: #ffffff;
+      --bg-soft: #fafafa;
+      --bg-muted: #f4f4f5;
+      --text: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #a1a1aa;
+      --border: #e4e4e7;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 40px 72px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 13px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(32px, 5vw, 46px);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 22px;
+      max-width: 620px;
+    }
+
+    .hero h1 .accent { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      padding: 5px 13px;
+      border-radius: 99px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover { border-color: #aaa; color: var(--text); }
+
+    /* STATS */
+    .stats-bar {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+    }
+
+    .stats-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .stat { text-align: center; }
+
+    .stat-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .stat-value span { color: var(--accent); }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* SECTIONS */
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 64px 40px;
+    }
+
+    .section + .section { padding-top: 0; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: border-color 0.15s, transform 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .project-card.featured {
+      grid-column: span 2;
+      background: var(--accent-light);
+      border-color: #c7d2fe;
+      flex-direction: row;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .project-card.featured:hover { border-color: var(--accent); }
+
+    .proj-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-light);
+      border: 1px solid #c7d2fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+
+    .project-card.featured .proj-icon {
+      width: 48px;
+      height: 48px;
+      background: white;
+      margin-bottom: 0;
+    }
+
+    .proj-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .project-card.featured .proj-icon svg { width: 22px; height: 22px; }
+
+    .proj-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .proj-lang {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      background: white;
+      border: 1px solid #c7d2fe;
+      padding: 2px 8px;
+      border-radius: 99px;
+      letter-spacing: 0.04em;
+    }
+
+    .project-card.featured .proj-lang { background: white; }
+
+    .proj-accuracy {
+      font-size: 10px;
+      font-weight: 600;
+      color: #16a34a;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .proj-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.005em;
+      line-height: 1.35;
+    }
+
+    .project-card.featured .proj-title { font-size: 17px; }
+
+    .proj-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .proj-footer {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .proj-tag {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-muted);
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .project-card.featured .proj-tag { background: white; }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .skill-group {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+    }
+
+    .skill-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .skill-pill {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      background: white;
+      border: 1px solid var(--border);
+      padding: 4px 11px;
+      border-radius: 99px;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-text strong { color: var(--text); font-weight: 600; }
+
+    .about-card {
+      background: var(--accent-light);
+      border: 1px solid #c7d2fe;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .about-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .about-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .about-item:last-child { margin-bottom: 0; }
+
+    .about-item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    .about-item-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .about-item-text strong { color: var(--text); font-weight: 600; }
+
+    /* CONTACT */
+    .contact-section {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 64px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .contact-text h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .contact-text p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    footer p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 48px 20px 52px; }
+      .stats-bar { padding: 24px 20px; }
+      .stats-inner { grid-template-columns: 1fr; gap: 18px; }
+      .section { padding: 48px 20px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card.featured { grid-column: span 1; flex-direction: column; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-inner { padding: 48px 20px; }
+      footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">WT</a>
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Open to internships &amp; opportunities
+    </div>
+    <h1>Predictive models and <span class="accent">statistical data analysis.</span></h1>
+    <p class="hero-sub">
+      Data analyst and developer focused on sports analytics —
+      predictive modeling, data pipelines, and visualization in Python, R, and SQL.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">Python</span>
+      <span class="tag">R</span>
+      <span class="tag">SQL</span>
+      <span class="tag">Logistic regression</span>
+      <span class="tag">Bayesian modeling</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">
+        View projects
+        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="https://github.com/wyattthompson915" target="_blank" rel="noopener" class="btn btn-secondary">
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat">
+        <div class="stat-value"><span>66</span>%</div>
+        <div class="stat-label">CFB model accuracy (2025)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Languages: Python · R · SQL</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">Political models built</div>
+        <div class="stat-label">Presidential approval and more</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="section-header">
+      <span class="section-label">Work</span>
+      <h2 class="section-title">Featured projects</h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Featured -->
+      <a href="#" class="project-card featured">
+        <div class="proj-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div>
+          <div class="proj-meta">
+            <span class="proj-lang">Python</span>
+            <span class="proj-accuracy">66% accuracy</span>
+          </div>
+          <div class="proj-title">College football game prediction pipeline</div>
+          <p class="proj-desc">
+            Built a logistic regression model using college football data. Rolling team
+            efficiency ratings built from yards per play and points per attempt across
+            offensive and defensive feature families. Tested on the full 2025 CFB season
+            with solid calibration.
+          </p>
+          <div class="proj-footer">
+            <span class="proj-tag">Logistic regression</span>
+            <span class="proj-tag">Feature engineering</span>
+            <span class="proj-tag">Calibration</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="project-card featured">
+        <div class="proj-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div>
+          <div class="proj-meta">
+            <span class="proj-lang">R</span>
+          </div>
+          <div class="proj-title">College baseball analysis of winning</div>
+          <p class="proj-desc">
+            Gathered 2026 college baseball data and used machine learning to determine
+            how much each variable impacts winning on a season-long basis. Wrote up
+            findings into an R Markdown PDF report.
+          </p>
+          <div class="proj-footer">
+            <span class="proj-tag">Linear regression</span>
+            <span class="proj-tag">Machine learning</span>
+            <span class="proj-tag">Baseball</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="project-card">
+        <div class="proj-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="proj-meta"><span class="proj-lang">R</span></div>
+        <div class="proj-title">Bayesian 3PT shooting model</div>
+        <p class="proj-desc">
+          Beta-Binomial hierarchical model regressing player shooting percentages toward a
+          prior anchored by free throw percentage as an empirical Bayes signal.
+        </p>
+        <div class="proj-footer">
+          <span class="proj-tag">Beta-Binomial</span>
+          <span class="proj-tag">Empirical Bayes</span>
+          <span class="proj-tag">CBB</span>
+        </div>
+      </a>
+
+      <a href="#" class="project-card">
+        <div class="proj-icon">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><circle cx="15" cy="15" r="3"/><circle cx="17" cy="7" r="2"/><circle cx="7" cy="17" r="2"/></svg>
+        </div>
+        <div class="proj-meta"><span class="proj-lang">Python</span></div>
+        <div class="proj-title">Political polling tracker</div>
+        <p class="proj-desc">
+          Using an API to track approval ratings for Donald Trump, JD Vance, Congress,
+          and the Supreme Court, as well as the generic ballot poll.
+        </p>
+        <div class="proj-footer">
+          <span class="proj-tag">API</span>
+          <span class="proj-tag">Rolling averages</span>
+          <span class="proj-tag">Graphing</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="section-header">
+      <span class="section-label">Toolkit</span>
+      <h2 class="section-title">Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">R</span>
+          <span class="skill-pill">SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Statistical modeling</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Logistic regression</span>
+          <span class="skill-pill">MLE</span>
+          <span class="skill-pill">Bayesian MAP</span>
+          <span class="skill-pill">ANOVA</span>
+          <span class="skill-pill">Chi-square</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools &amp; libraries</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Plotly</span>
+          <span class="skill-pill">Pandas</span>
+          <span class="skill-pill">scikit-learn</span>
+          <span class="skill-pill">ggplot2</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Data &amp; APIs</div>
+        <div class="skill-pills">
+          <span class="skill-pill">API</span>
+          <span class="skill-pill">requests</span>
+          <span class="skill-pill">web scraping</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Workflow</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Git</span>
+          <span class="skill-pill">GitHub</span>
+          <span class="skill-pill">Jupyter</span>
+          <span class="skill-pill">R Markdown</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Focus areas</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Sports analytics</span>
+          <span class="skill-pill">Predictive modeling</span>
+          <span class="skill-pill">Data pipelines</span>
+          <span class="skill-pill">Visualization</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-header">
+      <span class="section-label">Background</span>
+      <h2 class="section-title">About me</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          I'm a <strong>data analytics student at the University of Arkansas</strong> with a focus on
+          applied statistics and sports analytics. I spend a lot of time actively researching topics
+          I'm passionate about and finding real applications for my studies.
+        </p>
+        <p>
+          My main interest is statistics — specifically sports analytics. I've built
+          full prediction systems using college football data, Bayesian shooting models in Python,
+          and interactive Plotly dashboards for conference-level performance analysis.
+        </p>
+        <p>
+          I'm comfortable working across <strong>Python, R, and SQL</strong> and enjoy the full
+          process of cleaning raw data and working it into a polished, shareable output.
+        </p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-label">Quick facts</div>
+        <div class="about-item">
+          <span class="about-item-dot"></span>
+          <span class="about-item-text"><strong>University of Arkansas</strong> — Fayetteville, AR</span>
+        </div>
+        <div class="about-item">
+          <span class="about-item-dot"></span>
+          <span class="about-item-text">Applied statistics &amp; data analytics coursework</span>
+        </div>
+        <div class="about-item">
+          <span class="about-item-dot"></span>
+          <span class="about-item-text">Sports analytics</span>
+        </div>
+        <div class="about-item">
+          <span class="about-item-dot"></span>
+          <span class="about-item-text">Python · R · SQL across projects</span>
+        </div>
+        <div class="about-item">
+          <span class="about-item-dot"></span>
+          <span class="about-item-text">Open to <strong>internships &amp; analyst roles</strong></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <div class="contact-section" id="contact">
+    <div class="contact-inner">
+      <div class="contact-text">
+        <h2>Let's talk.</h2>
+        <p>Open to internships, analytics roles, and interesting projects.</p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:wht1705@email.com" class="btn btn-primary">Email me</a>
+        <a href="https://github.com/wyattthompson915" target="_blank" rel="noopener" class="btn btn-secondary">GitHub</a>
+        <a href="https://www.linkedin.com/in/wyatt-thompson915/" target="_blank" rel="noopener" class="btn btn-secondary">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Wyatt Thompson</p>
+    <p>Built with HTML &amp; CSS · Hosted on GitHub Pages</p>
+  </footer>
+
+</body>
+</html>
