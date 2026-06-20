@@ -188,9 +188,7 @@
     }
 
     .chart-wrap {
-      position: relative;
       width: 100%;
-      height: 340px;
     }
 
     .legend-row {
@@ -259,6 +257,13 @@
       color: var(--text-muted);
     }
 
+    .project-image {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
     .source-row a { color: var(--accent); text-decoration: none; font-weight: 500; }
     .source-row a:hover { text-decoration: underline; }
 
@@ -304,13 +309,9 @@
   </nav>
 
   <section class="hero">
-    <div class="hero-badge">
-      <span class="live-dot"></span>
-      Live data
-    </div>
     <h1>Political polling tracker</h1>
     <p class="hero-sub">
-      Live approval, favorability, and generic ballot polling pulled directly from the
+      Approval, favorability, and generic ballot polling pulled directly from the
       VoteHub API, aggregated with sample-size and population-weighted rolling averages.
     </p>
   </section>
@@ -321,24 +322,36 @@
 
     <div class="cards-row" id="metric-cards"></div>
 
+    <p class="body">
+      Function created to extract data via the API.
+    </p>
+
     <div class="chart-card">
-      <div class="chart-wrap">
-        <canvas id="pollChart" role="img" aria-label="Line chart of weighted rolling polling average over time">Loading polling trend chart.</canvas>
+        <img src="api_setup_more.png" class="project-image">
       </div>
       <div class="legend-row" id="legend-row"></div>
     </div>
 
-    <div class="status-bar" id="status">Loading live data from VoteHub...</div>
+    <p class="body">
+      Snapshot of the rolling mean approval/favorability ratings with error bars and polls shown.
+    </p>
+    <div class="chart-card">
+      <img src="trump_approval.png" class="project-image">
+    </div>
+    <div class="chart-card">
+      <img src="congress_approval.png" class="project-image">
+    </div>
+    <div class="chart-card">
+      <img src="scotus_approval.png" class="project-image">
+    </div>
 
     <div class="methodology">
       <div class="methodology-title">Methodology</div>
       <p>
         Each poll is weighted by its <strong>sample size</strong>, multiplied by a population factor —
         <strong>1.5x for likely voters</strong>, <strong>1.25x for registered voters</strong>, and
-        <strong>1x for all other populations</strong>. A <strong>15-poll rolling weighted average</strong>
-        is then applied to smooth short-term noise while staying responsive to real shifts in opinion.
-        This mirrors the same pipeline used in the original Python analysis, ported to run live in
-        the browser on every page load.
+        <strong>1x for all other populations</strong>. The graphs show a <strong>rolling weighted average</strong>
+        to smooth short-term noise while staying responsive to real shifts in opinion.
       </p>
     </div>
 
@@ -355,147 +368,7 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-  <script>
-    const subjects = [
-      { key: 'trump-approval', label: 'Trump approval', subject: 'Donald Trump', poll_type: 'approval', a: 'Approve', b: 'Disapprove', color: '#D85A30' },
-      { key: 'vance-favorable', label: 'Vance favorability', subject: 'JD Vance', poll_type: 'favorability', a: 'Favorable', b: 'Unfavorable', color: '#6366f1' },
-      { key: 'congress-approval', label: 'Congress approval', subject: 'Congress', poll_type: 'approval', a: 'Approve', b: 'Disapprove', color: '#0F6E56' },
-      { key: 'scotus-approval', label: 'SCOTUS approval', subject: 'Supreme Court', poll_type: 'approval', a: 'Approve', b: 'Disapprove', color: '#D4537E' },
-      { key: 'generic-ballot', label: 'Generic ballot', subject: '2026', poll_type: 'generic-ballot', a: 'Dem', b: 'Rep', color: '#185FA5' }
-    ];
 
-    let current = subjects[0];
-    let chart = null;
-    const WINDOW = 15;
-    const POP_FACTOR = { lv: 1.5, rv: 1.25 };
-
-    function renderTabs() {
-      const wrap = document.getElementById('subject-tabs');
-      wrap.innerHTML = subjects.map(s =>
-        `<button class="tab-btn ${s.key === current.key ? 'active' : ''}" data-key="${s.key}">${s.label}</button>`
-      ).join('');
-      wrap.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.onclick = () => {
-          current = subjects.find(s => s.key === btn.dataset.key);
-          renderTabs();
-          loadData();
-        };
-      });
-    }
-
-    function weightedRollingAvg(values, weights, window) {
-      const out = [];
-      for (let i = 0; i < values.length; i++) {
-        const start = Math.max(0, i - window + 1);
-        let wsum = 0, vsum = 0, n = 0;
-        for (let j = start; j <= i; j++) {
-          if (values[j] == null || weights[j] == null) continue;
-          wsum += weights[j];
-          vsum += values[j] * weights[j];
-          n++;
-        }
-        out.push(n > 0 ? vsum / wsum : null);
-      }
-      return out;
-    }
-
-    function fmtDate(d) {
-      const dt = new Date(d + 'T00:00:00');
-      return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
-    }
-
-    async function loadData() {
-      const status = document.getElementById('status');
-      status.textContent = 'Loading live data from VoteHub...';
-      try {
-        const url = `https://api.votehub.com/polls?poll_type=${current.poll_type}&subject=${encodeURIComponent(current.subject)}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Request failed: ' + res.status);
-        const data = await res.json();
-        const raw = Array.isArray(data) ? data : (data.polls || []);
-        let polls = raw.filter(p => p.end_date);
-        polls.sort((a, b) => new Date(a.end_date) - new Date(b.end_date));
-
-        const labels = [], vA = [], vB = [], weights = [];
-        polls.forEach(p => {
-          const aAns = p.answers.find(x => x.choice === current.a);
-          const bAns = p.answers.find(x => x.choice === current.b);
-          if (!aAns || !bAns) return;
-          labels.push(fmtDate(p.end_date));
-          vA.push(parseFloat(aAns.pct));
-          vB.push(parseFloat(bAns.pct));
-          const popFactor = POP_FACTOR[p.population] ?? 1;
-          weights.push(parseFloat(p.sample_size) * popFactor);
-        });
-
-        const rollA = weightedRollingAvg(vA, weights, WINDOW);
-        const rollB = weightedRollingAvg(vB, weights, WINDOW);
-        const lastA = rollA[rollA.length - 1];
-        const lastB = rollB[rollB.length - 1];
-        const net = (lastA !== null && lastB !== null) ? lastA - lastB : null;
-
-        document.getElementById('metric-cards').innerHTML = `
-          <div class="metric-card">
-            <div class="metric-label">${current.a} (weighted avg)</div>
-            <div class="metric-value" style="color:${current.color};">${lastA !== null ? lastA.toFixed(1) + '%' : 'N/A'}</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">${current.b} (weighted avg)</div>
-            <div class="metric-value" style="color:var(--text-muted);">${lastB !== null ? lastB.toFixed(1) + '%' : 'N/A'}</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Net</div>
-            <div class="metric-value" style="color:${net !== null && net >= 0 ? 'var(--green)' : 'var(--red)'};">${net !== null ? (net >= 0 ? '+' : '') + net.toFixed(1) : 'N/A'}</div>
-          </div>
-        `;
-
-        document.getElementById('legend-row').innerHTML = `
-          <span class="legend-item"><span class="legend-swatch" style="background:${current.color};"></span>${current.a}</span>
-          <span class="legend-item"><span class="legend-swatch" style="background:#a1a1aa;"></span>${current.b}</span>
-        `;
-
-        const ctx = document.getElementById('pollChart');
-        if (chart) chart.destroy();
-        chart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels,
-            datasets: [
-              { label: current.a, data: rollA, borderColor: current.color, backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 5, tension: 0.3 },
-              { label: current.b, data: rollB, borderColor: '#a1a1aa', backgroundColor: 'transparent', borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 5, tension: 0.3, borderDash: [5, 4] }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            scales: {
-              x: { ticks: { maxTicksLimit: 8, font: { size: 11 }, color: '#a1a1aa' }, grid: { display: false } },
-              y: { ticks: { font: { size: 11 }, color: '#a1a1aa', callback: v => v + '%' }, grid: { color: 'rgba(0,0,0,0.05)' } }
-            },
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: '#18181b',
-                titleFont: { size: 12 },
-                bodyFont: { size: 12 },
-                padding: 10,
-                cornerRadius: 8,
-                callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` }
-              }
-            }
-          }
-        });
-
-        status.textContent = `${polls.length} polls loaded · weighted, ${WINDOW}-poll rolling average · live from api.votehub.com`;
-      } catch (err) {
-        status.textContent = 'Could not load live data: ' + err.message;
-      }
-    }
-
-    renderTabs();
-    loadData();
-  </script>
 
 </body>
 </html>
