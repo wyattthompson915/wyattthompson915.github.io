@@ -1,0 +1,91 @@
+* {
+    background-color: #d9d5d0;
+    font-family: Georgia;
+}
+
+a {
+    text-decoration: none;
+}
+
+.main-title {
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.card {
+    text-align: center;
+    background-color: #232323;
+    border-radius: 15px;
+    color: #d9d5d0;
+    padding: 5px 15px;
+    margin: 20px auto;
+    width: 500px;
+    opacity: 75%;
+    border-color: #131313;
+    border-width: 3px;
+    border-style: solid;
+}
+
+.card h3,
+.card h4,
+.card p {
+    background-color: #232323;
+    width: 500px;
+}
+
+.card ul {
+    background-color: #232323;
+    columns: 2;
+}
+
+.card li {
+    background-color: #232323;
+    text-align: left;
+    padding: 10px;
+}
+
+.card-second {
+    text-align: center;
+    background-color: #232323;
+    border-radius: 15px;
+    color: #d9d5d0;
+    padding: 5px 15px;
+    margin: 20px auto;
+    width: 250px;
+    opacity: 75%;
+    border-color: #131313;
+    border-width: 3px;
+    border-style: solid;
+}
+
+.card-second a,
+.card-second p {
+    background-color: transparent;
+    text-decoration: none;
+}
+.card-second:hover {
+    background-color: #3f3f3f;
+}
+
+
+.contact-info {
+    text-align: center;
+    color: rgb(85, 85, 85);
+    border-top: #232323;
+    border-top-style: solid;
+    border-top-width: thin;
+    margin-top: 350px;
+    margin-bottom: 30px;
+}
+
+nav {
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 20px;
+}
